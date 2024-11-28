@@ -17,6 +17,7 @@ class AvailableSlot(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='available_slot')
     date = models.DateField()
     time = models.TimeField()
+    price = models.IntegerField(default=10)
     is_booked = models.BooleanField(default=False)
 
     def __str__(self):
@@ -32,3 +33,9 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f'appointment for {self.patient.username} with {self.doctor.name}'
+
+
+class Review(models.Model):
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review')
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='review')
+    text = models.TextField()

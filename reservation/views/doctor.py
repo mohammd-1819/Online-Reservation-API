@@ -1,12 +1,12 @@
-from reservation.models.reservation import Doctor
-from reservation.serializers import DoctorSerializer
+from reservation.models.reservation import Doctor, Review
+from reservation.serializers import DoctorSerializer, ReviewSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from reservation.utility.pagination import StandardResultSetPagination
-from reservation.utility.permissions import IsReadOnlyUser
+from reservation.utility.permissions import IsReadOnlyUser, IsDoctor, IsPatient
 
 
 class DoctorListView(APIView, StandardResultSetPagination):
@@ -60,3 +60,24 @@ class DoctorView(APIView):
         doctor = get_object_or_404(Doctor, name=name)
         doctor.delete()
         return Response({'message': 'doctor deleted'})
+
+
+class DoctorReviewView(APIView, StandardResultSetPagination):
+    permission_classes = (IsPatient,)
+
+    def get(self, request, doctor_name):
+        reviews = Review.objects.filter(doctor__name=doctor_name).select_related('doctor')
+        result = self.paginate_queryset(reviews, request)
+        serializer = ReviewSerializer(result, many=True)
+        return self.get_paginated_response(serializer.data)
+
+
+class AddReviewView(APIView):
+    permission_classes = (IsPatient,)
+
+    def post(self, request):
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

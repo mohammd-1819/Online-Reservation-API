@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models.reservation import Doctor, AvailableSlot, Appointment
+from .models.reservation import Doctor, AvailableSlot, Appointment, Review
 from account.models import User
 
 
@@ -25,8 +25,8 @@ class SlotSummarySerializer(serializers.ModelSerializer):
 
 class AppointmentSerializer(serializers.ModelSerializer):
     patient = serializers.SlugRelatedField(slug_field='email', queryset=User.objects.all())
-    doctor = DoctorSerializer()
-    slot = SlotSummarySerializer()
+    doctor = serializers.PrimaryKeyRelatedField(queryset=Doctor.objects.all())
+    slot = serializers.PrimaryKeyRelatedField(queryset=AvailableSlot.objects.all())
 
     class Meta:
         model = Appointment
@@ -43,3 +43,12 @@ class AppointmentSerializer(serializers.ModelSerializer):
         slot.is_booked = True
         slot.save()
         return super().create(validated_data)
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    patient = serializers.SlugRelatedField(slug_field='email', queryset=User.objects.all())
+    doctor = DoctorSerializer()
+
+    class Meta:
+        model = Review
+        exclude = ('id',)

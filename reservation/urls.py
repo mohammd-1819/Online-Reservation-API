@@ -19,5 +19,10 @@ urlpatterns = [
     path('appointment/detail/<str:patient_username>', appointment.AppointmentDetailView.as_view(),
          name='appointment-detail'),
     path('appointment/create', appointment.AppointmentCreateView.as_view(), name='appointment-create'),
+    path('appointment/cancel/<str:patient_username>', appointment.CancelAppointmentView.as_view(),
+         name='appointment-cancel'),
+
+    path('review/doctor/<str:doctor_name>', doctor.DoctorReviewView.as_view(), name='doctor-review'),
+    path('review/add', doctor.AddReviewView.as_view(), name='review-add'),
 
 ]

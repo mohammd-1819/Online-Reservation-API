@@ -9,9 +9,14 @@ class DoctorAdmin(admin.ModelAdmin):
 
 @admin.register(reservation.AvailableSlot)
 class AvailableSlotAdmin(admin.ModelAdmin):
-    list_display = ('doctor', 'date', 'time')
+    list_display = ('doctor', 'date', 'time', 'is_booked')
 
 
 @admin.register(reservation.Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('patient', 'doctor', 'slot')
+
+
+@admin.register(reservation.Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('patient', 'doctor')

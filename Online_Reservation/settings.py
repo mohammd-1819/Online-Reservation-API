@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     # apps
     'rest_framework',
     'account.apps.AccountConfig',
-    'reservation.apps.ReservationConfig'
+    'reservation.apps.ReservationConfig',
+    'cart.apps.CartConfig'
 ]
 
 MIDDLEWARE = [
@@ -147,3 +148,8 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=5000),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5000),
 }
+
+
+MERCHANT = "00000000-0000-0000-0000-000000000000"
+
+SANDBOX = True
